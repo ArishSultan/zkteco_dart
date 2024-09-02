@@ -1,0 +1,7 @@
+class ZkMessage {
+
+}
+
+class ZkReply {
+
+}
