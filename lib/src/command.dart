@@ -1,9 +1,10 @@
 part of '../zkteco.dart';
 
-enum Commands {
-  connect(0);
-
-  const Commands(this._);
+enum Command {
+  connect(1000),
+  getFreeSizes(50)
+  ;
+  const Command(this._);
 
   final int _;
 }
