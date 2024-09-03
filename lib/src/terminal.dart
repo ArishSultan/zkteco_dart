@@ -21,6 +21,12 @@ final class Terminal {
   }
 
   ///
+  Future<void> disconnect() {
+    _bridge.send(Command.exit);
+    return _bridge.dispose();
+  }
+
+  ///
   Future<String> get isOnlyRFMachine async =>
       _readDeviceProperty('IsOnlyRFMachine');
 
@@ -105,7 +111,7 @@ final class Terminal {
 
   ///
   Future<DeviceStatus> get deviceStatus async {
-    final data = await _bridge.receive(await _bridge.send(Command.readStatus));
+    final data = await _bridge.receive(_bridge.send(Command.readStatus));
 
     if (data.length < 92) {
       throw Exception(
@@ -118,7 +124,7 @@ final class Terminal {
 
   Future<String> _readDeviceProperty(String propertyName) async {
     final data = await _bridge.receive(
-      await _bridge.send(Command.readProperty, '~$propertyName'.codeUnits),
+      _bridge.send(Command.readProperty, '~$propertyName'.codeUnits),
     );
 
     final strValue = String.fromCharCodes(data).split('=')[1];

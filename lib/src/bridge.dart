@@ -43,11 +43,15 @@ base class ZkBridge {
   ///
   Future<void> dispose() async {
     await _socketSubscription?.cancel();
+    for (final item in _pendingReplies.values) {
+      item.completeError(-1);
+    }
+
     socket.close();
   }
 
   ///
-  Future<int> send(Command command, [List<int>? data]) async {
+  int send(Command command, [List<int>? data]) {
     _pendingReplies[_messageId] = Completer();
     socket.send(
       _encodeMessage(command._, _sessionId, _messageId, data),
