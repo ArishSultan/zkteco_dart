@@ -22,6 +22,7 @@ void main() async {
 
   final terminal = await Terminal.connect(InternetAddress('192.168.0.201'), 4370);
   print(await terminal.deviceStatus);
+  print(await terminal.deviceName);
 }
 //
 // // class A extends ZKDatagramBridge {

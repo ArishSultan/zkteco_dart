@@ -2,7 +2,8 @@ part of '../zkteco.dart';
 
 enum Command {
   connect(1000),
-  getFreeSizes(50)
+  readStatus(50),
+  readProperty(11),
   ;
   const Command(this._);
 

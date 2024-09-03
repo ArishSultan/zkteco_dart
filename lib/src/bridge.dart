@@ -59,7 +59,7 @@ base class ZkBridge {
     return _messageId++;
   }
 
-  Future<List<int>> receive(int messageId) async {
+  Future<Uint8List> receive(int messageId) async {
     return _pendingReplies[messageId]!.future;
   }
 
