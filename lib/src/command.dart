@@ -11,6 +11,8 @@ enum Command {
   resume(1007),
   readStatus(50),
   readProperty(11),
+  readUsers(9),
+
   ;
   const Command(this._);
 

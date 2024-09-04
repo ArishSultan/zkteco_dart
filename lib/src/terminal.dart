@@ -122,6 +122,14 @@ final class Terminal {
     return DeviceStatus.fromByteData(data.buffer.asByteData());
   }
 
+  Future<void> get users async {
+    _bridge.receive(_bridge.send(Command.readUsers));
+
+
+    // int[] toSend = ZKCommand.getPacket(CommandCodeEnum.CMD_USERTEMP_RRQ, sessionId, replyNo, null);
+    // ;
+  }
+
   Future<String> _readDeviceProperty(String propertyName) async {
     final data = await _bridge.receive(
       _bridge.send(Command.readProperty, '~$propertyName'.codeUnits),
