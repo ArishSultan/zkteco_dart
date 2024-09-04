@@ -1,5 +1,5 @@
 name: zkteco
-description: A starting point for Dart libraries or applications.
+description: ZKTeco client to communicate with ZKTeco devices
 version: 1.0.0
 
 repository: https://github.com/ArishSultan/zkteco_dart.git
