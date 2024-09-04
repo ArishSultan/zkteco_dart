@@ -10,10 +10,10 @@ enum Command {
   sleep(1006),
   resume(1007),
   readStatus(50),
-  readProperty(11),
   readUsers(9),
+  readProperty(11),
+  readAttendances(13);
 
-  ;
   const Command(this._);
 
   final int _;

@@ -10,6 +10,8 @@ part 'src/helpers.dart';
 
 part 'src/terminal.dart';
 
+part 'src/models/attendance.dart';
+
 part 'src/models/device_status.dart';
 
 part 'src/models/user.dart';
@@ -30,7 +32,7 @@ void main() async {
   final terminal =
       await Terminal.connect(InternetAddress('192.168.0.201'), 4370);
   // print(await terminal.deviceStatus);
-  print(await terminal.users);
+  print(await terminal.attendances);
 }
 //
 // // class A extends ZKDatagramBridge {

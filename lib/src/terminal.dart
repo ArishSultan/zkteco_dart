@@ -118,28 +118,11 @@ final class Terminal {
     return DeviceStatus._fromByteData(data.buffer.asByteData());
   }
 
-  Future<List<User>> get users async {
-    const userSizeInBytes = 72;
+  Future<List<User>> get users =>
+      _readRecordsList(Command.readUsers, 72, User.fromByteData);
 
-    final data = await _bridge.sendAndReceive(Command.readUsers);
-    final byteData = data.sublist(8).buffer.asByteData();
-
-    final users = <User>[];
-    final usersCount = byteData.getUint32(0, Endian.little) ~/ userSizeInBytes;
-    for (int i = 0; i < usersCount; ++i) {
-      final offset = 12 + i * userSizeInBytes;
-      users.add(
-        User._fromByteData(
-          data
-              .sublist(offset, offset + userSizeInBytes)
-              .buffer
-              .asByteData(),
-        ),
-      );
-    }
-
-    return users;
-  }
+  Future<List<Attendance>> get attendances =>
+      _readRecordsList(Command.readAttendances, 40, Attendance.fromByteData);
 
   Future<String> _readDeviceProperty(String propertyName) async {
     final data = await _bridge.receive(
@@ -149,5 +132,25 @@ final class Terminal {
     final strValue = String.fromCharCodes(data).split('=')[1];
 
     return strValue.substring(0, strValue.length - 1);
+  }
+
+  Future<List<T>> _readRecordsList<T>(
+    Command command,
+    int recordSize,
+    T Function(ByteData data) creator,
+  ) async {
+    final data = await _bridge.sendAndReceive(command);
+    final byteData = data.sublist(8).buffer.asByteData();
+
+    final records = <T>[];
+    final recordsCount = byteData.getUint32(0, Endian.little) ~/ recordSize;
+    for (var i = 0; i < recordsCount; ++i) {
+      final offset = 12 + i * recordSize;
+      final userBytes = data.sublist(offset, offset + recordSize);
+
+      records.add(creator(userBytes.buffer.asByteData()));
+    }
+
+    return records;
   }
 }

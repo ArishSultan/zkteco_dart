@@ -16,8 +16,7 @@ final class User {
     required this.serialNumber,
   });
 
-  factory User._fromByteData(ByteData data) {
-    // Resolve permission token and roles
+  factory User.fromByteData(ByteData data) {
     final permissionToken = data.getUint8(2);
 
     return User(
