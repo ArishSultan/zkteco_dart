@@ -3,9 +3,16 @@ import 'dart:io';
 import 'dart:typed_data';
 
 part 'src/bridge.dart';
+
 part 'src/command.dart';
+
+part 'src/helpers.dart';
+
 part 'src/terminal.dart';
+
 part 'src/models/device_status.dart';
+
+part 'src/models/user.dart';
 
 void main() async {
   // final socket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, 9000);
@@ -20,11 +27,10 @@ void main() async {
   // print(socket.address);
   // print(socket.port);
 
-  final terminal = await Terminal.connect(InternetAddress('192.168.0.201'), 4370);
-  await terminal.users;
-  // print(await terminal.deviceName);
-
-  // await terminal.disconnect();
+  final terminal =
+      await Terminal.connect(InternetAddress('192.168.0.201'), 4370);
+  // print(await terminal.deviceStatus);
+  print(await terminal.users);
 }
 //
 // // class A extends ZKDatagramBridge {

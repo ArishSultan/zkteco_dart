@@ -5,17 +5,13 @@ final class Terminal {
   ///
   const Terminal._(this._bridge);
 
-  final ZkBridge _bridge;
-
-  int get port => _bridge.devicePort;
-
-  InternetAddress get host => _bridge.deviceHost;
+  final ZKTecoBridge _bridge;
 
   ///
   static Future<Terminal> connect(InternetAddress address, int port) async {
-    final bridge = await ZkBridge.create(address, port);
+    final bridge = await ZKTecoBridge.create(address, port);
 
-    await bridge.receive(await bridge.send(Command.connect));
+    await bridge.sendAndReceive(Command.connect);
 
     return Terminal._(bridge);
   }
@@ -119,15 +115,30 @@ final class Terminal {
       );
     }
 
-    return DeviceStatus.fromByteData(data.buffer.asByteData());
+    return DeviceStatus._fromByteData(data.buffer.asByteData());
   }
 
-  Future<void> get users async {
-    _bridge.receive(_bridge.send(Command.readUsers));
+  Future<List<User>> get users async {
+    const userSizeInBytes = 72;
 
+    final data = await _bridge.sendAndReceive(Command.readUsers);
+    final byteData = data.sublist(8).buffer.asByteData();
 
-    // int[] toSend = ZKCommand.getPacket(CommandCodeEnum.CMD_USERTEMP_RRQ, sessionId, replyNo, null);
-    // ;
+    final users = <User>[];
+    final usersCount = byteData.getUint32(0, Endian.little) ~/ userSizeInBytes;
+    for (int i = 0; i < usersCount; ++i) {
+      final offset = 12 + i * userSizeInBytes;
+      users.add(
+        User._fromByteData(
+          data
+              .sublist(offset, offset + userSizeInBytes)
+              .buffer
+              .asByteData(),
+        ),
+      );
+    }
+
+    return users;
   }
 
   Future<String> _readDeviceProperty(String propertyName) async {

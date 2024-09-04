@@ -18,7 +18,7 @@ final class DeviceStatus {
     required this.remainingAttendanceLogs,
   });
 
-  factory DeviceStatus.fromByteData(ByteData data) {
+  factory DeviceStatus._fromByteData(ByteData data) {
     return DeviceStatus(
       faceCount: data.getInt32(80, Endian.little),
       userCount: data.getInt32(16, Endian.little),
